@@ -40,4 +40,29 @@ CHIP CPU {
 
     PARTS:
     // Put your code here:
+    Mux16(a=instruction[0..15], b=ualOutput, sel=instruction[15], out=muxA);    //First multiplexer
+    Not(in=Cinstruct, out=Ainstruct);
+    Or(a=Ainstruct, b=instruction[5], out=loadRegisterA);
+    Register(in=muxA, load=loadRegisterA, out=registA, out[0..14]=addressM); //Register A
+    Mux16(a=registA, b=inM[0..15], sel=instruction[12], out=muxUAL);            //Second multiplexer
+    DRegister(in=ualOutput, load=instruction[4], out=registD);                //Register D
+    ALU(x=registD, y=muxUAL, zx=instruction[11], nx=instruction[10], zy=instruction[9], ny=instruction[8], f=instruction[7], no=instruction[6], out=ualOutput, out=outM, zr=zr, ng=ng); //UAL
+
+    Not(in=ng, out=pos);
+    Not(in=zr, out=notzr);
+    And(a=instruction[0], b=pos, out=posJGT);
+    And(a=notzr, b=posJGT, out=JGT);       //Jump JGT
+    And(a=instruction[1], b=zr, out=JEQ);  //Jump JEQ
+                                           //Jump JGE
+    And(a=instruction[2], b=ng, out=JLT);  //Jump JLT
+                                           //Jump JNE
+                                           //Jump JLE
+                                           //Jump JMP
+    Or(a=JGT, b=JEQ, out=firstOr);
+    Or(a=JLT, b=firstOr, out=secondOr);
+    And(a=secondOr, b=Cinstruct, out=loadPC);
+    Not(in=loadPC, out=notLoad);
+    PC(in=registA, load=loadPC, inc=notLoad, reset=reset, out[0..14]=pc);
+    And(a=instruction[15], b=true, out=Cinstruct);
+    And(a=Cinstruct, b=instruction[3], out=writeM);                           //Write to M
 }
