@@ -11,11 +11,11 @@ public class Parser {
         this.code = new Code();
     }
 
-    public void readLinesAndWrite(Scanner scanner, String fileName) throws IOException {
+    public void readLinesAndWrite(Scanner scanner, String folderName, String fileName) throws IOException {
         String output;
-        File file = new File("add/" + fileName + ".hack");
+        File file = new File(folderName + "/" + fileName + ".hack");
         file.delete();
-        BufferedWriter writer = new BufferedWriter(new FileWriter("add/" + fileName + ".hack", true));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(folderName + "/" + fileName + ".hack", true));
         while(scanner.hasNextLine()){
             String data = scanner.nextLine();
             data = data.split("//")[0];
@@ -23,15 +23,22 @@ public class Parser {
             if (data.charAt(0)=='@'){
                 output = code.toBinary(data.split("@")[1]);
             } else {
-                String dest = code.toDest(data.split("=")[0]);
-                String comp = code.toComp(data.split("=")[1].split(";")[0]);
-                String jump;
-                if (dest.split(";").length !=1){
-                    jump = code.toJump(data.split("=")[1].split(";")[1]);
+                if(data.split("=").length!=1){
+                    String dest = code.toDest(data.split("=")[0]);
+                    String comp = code.toComp(data.split("=")[1].split(";")[0]);
+                    String jump;
+                    if (dest.split(";").length !=1){
+                        jump = code.toJump(data.split("=")[1].split(";")[1]);
+                    } else {
+                        jump = code.toJump(null);
+                    }
+                    output = "111" + comp + dest + jump;
                 } else {
-                    jump = code.toJump(null);
+                    String comp = code.toComp(data.split(";")[0]);
+                    String jump = code.toJump(data.split(";")[1]);
+                    output = "111" + comp + "000" + jump;
                 }
-                output = "111" + comp + dest + jump;
+
             }
             writer.append(output);
             writer.newLine();

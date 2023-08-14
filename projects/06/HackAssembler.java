@@ -6,9 +6,11 @@ public class HackAssembler {
 
     public static void main(String[] args) {
         try {
-            File file = new File("add/add.asm");
+            String folderName = "pong";
+            String fileName = "PongL";
+            File file = new File(folderName + "/" + fileName + ".asm");
             Parser myParser = new Parser(file);
-            myParser.readLinesAndWrite(myParser.getScanner(), "add");
+            myParser.readLinesAndWrite(myParser.getScanner(), folderName, fileName);
             myParser.closeFile(myParser.getScanner());
         } catch (FileNotFoundException e){
             System.out.println("The file wasn't found");
