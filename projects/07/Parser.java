@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Parser {
@@ -19,7 +20,6 @@ public class Parser {
 
     public void readLinesAndWrite(Scanner scanner, String fileName) throws IOException {
         //Setting up the output file
-        String output;
         File file = new File(fileName + ".asm");
         file.delete();
         fileName = fileName.substring(0, fileName.length()-3);
@@ -38,7 +38,22 @@ public class Parser {
             }
 
             //Start of the translation
+            String[] datas = data.split(" ");
+            Code code;
+            if (datas.length==1){
+                code = new Code(datas[0], null, null);
+            } else {
+                code = new Code(datas[0], datas[1], datas[2]);
+            }
+
+            //Getting the translation
+            ArrayList<String> ops = code.process();
+            for (String text:ops) {
+                writer.append(text);
+                writer.newLine();
+            }
         }
 
+        writer.close();
     }
 }
