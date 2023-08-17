@@ -13,11 +13,12 @@ public class Parser {
         this.symbolTable = new SymbolTable();
     }
 
-    public void readLinesAndWrite(Scanner scanner, String folderName, String fileName, Parser myParser2, Parser myParser3) throws IOException {
+    public void readLinesAndWrite(Scanner scanner, String fileName, Parser myParser2, Parser myParser3) throws IOException {
         String output;
-        File file = new File(folderName + "/" + fileName + ".hack");
+        File file = new File(fileName + ".hack");
         file.delete();
-        BufferedWriter writer = new BufferedWriter(new FileWriter(folderName + "/" + fileName + ".hack", true));
+        fileName = fileName.substring(0, fileName.length()-4);
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".hack", true));
         int lineNumber = 0;
 
         while(scanner.hasNextLine()) {
@@ -85,7 +86,7 @@ public class Parser {
                     if (dest.split(";").length !=1){
                         jump = code.toJump(data.split("=")[1].split(";")[1]);
                     } else {
-                        jump = code.toJump(null);
+                        jump = code.toJump("null");
                     }
                     output = "111" + comp + dest + jump;
                 } else {

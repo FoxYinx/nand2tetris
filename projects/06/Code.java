@@ -9,7 +9,6 @@ public class Code {
 
     public String toDest(String dest){
         return switch (dest) {
-            case null -> "000";
             case "M" -> "001";
             case "D" -> "010";
             case "MD" -> "011";
@@ -17,7 +16,7 @@ public class Code {
             case "AM" -> "101";
             case "AD" -> "110";
             case "AMD" -> "111";
-            default -> throw new IllegalStateException("Unexpected value: " + dest);
+            default -> "000";
         };
     }
 
@@ -57,7 +56,6 @@ public class Code {
 
     public String toJump(String jump){
         return switch (jump) {
-            case null -> "000";
             case "JGT" -> "001";
             case "JEQ" -> "010";
             case "JGE" -> "011";
@@ -65,7 +63,7 @@ public class Code {
             case "JNE" -> "101";
             case "JLE" -> "110";
             case "JMP" -> "111";
-            default -> throw new IllegalStateException("Unexpected value: " + jump);
+            default -> "000";
         };
     }
 
