@@ -102,11 +102,11 @@ public class Parser {
         writer.close();
     }
 
-    public void closeFile(Scanner scanner){
-        scanner.close();
-    }
+        public void closeFile(Scanner scanner){
+            scanner.close();
+        }
 
-    public Scanner getScanner() {
-        return scanner;
-    }
+        public Scanner getScanner() {
+            return scanner;
+        }
 }
