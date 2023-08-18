@@ -27,35 +27,41 @@ public class Code {
 
     public ArrayList<String> pushProcess(String arg1, String arg2, String filename){
         ArrayList<String> instructions = new ArrayList<>();
-        if (arg1.equals("constant")){
-            instructions.add("@" + arg2);
-            instructions.add("D=A");
-        } else if (arg1.equals("static")){
-            filename = filename.substring(3);
-            instructions.add("@" + filename + "." + arg2);
-            instructions.add("D=M");
-        } else if (arg1.equals("pointer")){
-            if(arg2.equals("0")){
-                instructions.add("@THIS");
-            } else {
-                instructions.add("@THAT");
+        switch (arg1) {
+            case "constant" -> {
+                instructions.add("@" + arg2);
+                instructions.add("D=A");
             }
-            instructions.add("D=M");
-        } else if (arg1.equals("temp")){
-            instructions.add("@5");
-            instructions.add("D=A");
-            instructions.add("@" + arg2);
-            instructions.add("A=A+D");
-            instructions.add("D=M");
-        } else {
-            if (arg1.equals("local")) instructions.add("@LCL");
-            if (arg1.equals("argument")) instructions.add("@ARG");
-            if (arg1.equals("this")) instructions.add("@THIS");
-            if (arg1.equals("that")) instructions.add("@THAT");
-            instructions.add("D=M");
-            instructions.add("@" + arg2);
-            instructions.add("A=A+D");
-            instructions.add("D=M");
+            case "static" -> {
+                filename = filename.substring(3);
+                instructions.add("@" + filename + "." + arg2);
+                instructions.add("D=M");
+            }
+            case "pointer" -> {
+                if (arg2.equals("0")) {
+                    instructions.add("@THIS");
+                } else {
+                    instructions.add("@THAT");
+                }
+                instructions.add("D=M");
+            }
+            case "temp" -> {
+                instructions.add("@5");
+                instructions.add("D=A");
+                instructions.add("@" + arg2);
+                instructions.add("A=A+D");
+                instructions.add("D=M");
+            }
+            default -> {
+                if (arg1.equals("local")) instructions.add("@LCL");
+                if (arg1.equals("argument")) instructions.add("@ARG");
+                if (arg1.equals("this")) instructions.add("@THIS");
+                if (arg1.equals("that")) instructions.add("@THAT");
+                instructions.add("D=M");
+                instructions.add("@" + arg2);
+                instructions.add("A=A+D");
+                instructions.add("D=M");
+            }
         }
         instructions = increaseSP(instructions);
 
@@ -64,30 +70,35 @@ public class Code {
 
     public ArrayList<String> popProcess(String arg1, String arg2, String filename){
         ArrayList<String> instructions = new ArrayList<>();
-        if(arg1.equals("static")){
-            filename = filename.substring(3);
-            instructions.add("@" + filename + "." + arg2);
-            instructions.add("D=A");
-        } else if (arg1.equals("pointer")) {
-            if(arg2.equals("0")){
-                instructions.add("@THIS");
-            } else {
-                instructions.add("@THAT");
+        switch (arg1) {
+            case "static" -> {
+                filename = filename.substring(3);
+                instructions.add("@" + filename + "." + arg2);
+                instructions.add("D=A");
             }
-            instructions.add("D=A");
-        } else if (arg1.equals("temp")) {
-            instructions.add("@5");
-            instructions.add("D=A");
-            instructions.add("@" + arg2);
-            instructions.add("D=D+A");
-        } else {
-            if (arg1.equals("local")) instructions.add("@LCL");
-            if (arg1.equals("argument")) instructions.add("@ARG");
-            if (arg1.equals("this")) instructions.add("@THIS");
-            if (arg1.equals("that")) instructions.add("@THAT");
-            instructions.add("D=M");
-            instructions.add("@" + arg2);
-            instructions.add("D=D+A");
+            case "pointer" -> {
+                if (arg2.equals("0")) {
+                    instructions.add("@THIS");
+                } else {
+                    instructions.add("@THAT");
+                }
+                instructions.add("D=A");
+            }
+            case "temp" -> {
+                instructions.add("@5");
+                instructions.add("D=A");
+                instructions.add("@" + arg2);
+                instructions.add("D=D+A");
+            }
+            default -> {
+                if (arg1.equals("local")) instructions.add("@LCL");
+                if (arg1.equals("argument")) instructions.add("@ARG");
+                if (arg1.equals("this")) instructions.add("@THIS");
+                if (arg1.equals("that")) instructions.add("@THAT");
+                instructions.add("D=M");
+                instructions.add("@" + arg2);
+                instructions.add("D=D+A");
+            }
         }
         instructions = popSP(instructions);
 
