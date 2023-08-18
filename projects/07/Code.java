@@ -31,6 +31,7 @@ public class Code {
             instructions.add("@" + arg2);
             instructions.add("D=A");
         } else if (arg1.equals("static")){
+            filename = filename.substring(3);
             instructions.add("@" + filename + "." + arg2);
             instructions.add("D=M");
         } else if (arg1.equals("pointer")){
@@ -64,6 +65,7 @@ public class Code {
     public ArrayList<String> popProcess(String arg1, String arg2, String filename){
         ArrayList<String> instructions = new ArrayList<>();
         if(arg1.equals("static")){
+            filename = filename.substring(3);
             instructions.add("@" + filename + "." + arg2);
             instructions.add("D=A");
         } else if (arg1.equals("pointer")) {
