@@ -24,6 +24,7 @@ public class Parser {
         File file = new File(fileName + ".asm");
         file.delete();
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".asm", true));
+        int nb=0;
 
         while(scanner.hasNextLine()){
             //Handling comments and whitespaces
@@ -47,7 +48,8 @@ public class Parser {
             }
 
             //Getting the translation
-            ArrayList<String> ops = code.process(fileName);
+            ArrayList<String> ops = code.process(fileName, nb);
+            nb++;
             for (String text:ops) {
                 writer.append(text);
                 writer.newLine();

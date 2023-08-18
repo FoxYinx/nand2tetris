@@ -12,7 +12,7 @@ public class Code {
         this.arg2 = arg2;
     }
 
-    public ArrayList<String> process(String filename) {
+    public ArrayList<String> process(String filename, int nb) {
         ArrayList<String> output = new ArrayList<>();
         output.add("// " + commandType + " " + arg1 + " " + arg2);
         if(commandType.equals("push")){
@@ -20,7 +20,7 @@ public class Code {
         } else if (commandType.equals("pop")){
             output.addAll(popProcess(arg1, arg2, filename));
         } else {
-            output.addAll(arithAndLogicProcess(commandType));
+            output.addAll(arithAndLogicProcess(commandType, nb));
         }
         return output;
     }
@@ -94,26 +94,133 @@ public class Code {
         return instructions;
     }
 
-    public ArrayList<String> arithAndLogicProcess(String commandType){
+    public ArrayList<String> arithAndLogicProcess(String commandType, int nb){
         ArrayList<String> instructions = new ArrayList<>();
-        if (commandType.equals("add")){
-            instructions.add("@SP");
-            instructions.add("M=M-1");
-            instructions.add("A=M");
-            instructions.add("D=M");
-            instructions.add("A=A-1");
-            instructions.add("M=D+M");
-        } else if (commandType.equals("sub")) {
-            instructions.add("@SP");
-            instructions.add("M=M-1");
-            instructions.add("A=M-1");
-            instructions.add("D=M");
-            instructions.add("@SP");
-            instructions.add("A=M");
-            instructions.add("D=D-M");
-            instructions.add("@SP");
-            instructions.add("A=M-1");
-            instructions.add("M=D");
+        switch (commandType) {
+            case "add" -> {
+                instructions.add("@SP");
+                instructions.add("M=M-1");
+                instructions.add("A=M");
+                instructions.add("D=M");
+                instructions.add("A=A-1");
+                instructions.add("M=D+M");
+            }
+            case "sub" -> {
+                instructions.add("@SP");
+                instructions.add("M=M-1");
+                instructions.add("A=M-1");
+                instructions.add("D=M");
+                instructions.add("@SP");
+                instructions.add("A=M");
+                instructions.add("D=D-M");
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=D");
+            }
+            case "neg" -> {
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=-M");
+            }
+            case "not" -> {
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=!M");
+            }
+            case "or" -> {
+                instructions.add("@SP");
+                instructions.add("AM=M-1");
+                instructions.add("D=M");
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=D|M");
+            }
+            case "and" -> {
+                instructions.add("@SP");
+                instructions.add("AM=M-1");
+                instructions.add("D=M");
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=D&M");
+            }
+            case "eq" -> {
+                instructions.add("@SP");
+                instructions.add("AM=M-1");
+                instructions.add("D=M");
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=D-M");
+                instructions.add("D=M");
+                instructions.add("@EQUAL"+nb);
+                instructions.add("D;JEQ");
+                instructions.add("@0");
+                instructions.add("D=A");
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=D");
+                instructions.add("@ENDE"+nb);
+                instructions.add("0;JMP");
+                instructions.add("(EQUAL"+nb+")");
+                instructions.add("@0");
+                instructions.add("D=A");
+                instructions.add("D=!D");
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=D");
+                instructions.add("(ENDE"+nb+")");
+            }
+            case "gt" -> {
+                instructions.add("@SP");
+                instructions.add("AM=M-1");
+                instructions.add("D=M");
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=D-M");
+                instructions.add("D=M");
+                instructions.add("@GREATER"+nb);
+                instructions.add("D;JLT");
+                instructions.add("@0");
+                instructions.add("D=A");
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=D");
+                instructions.add("@ENDG"+nb);
+                instructions.add("0;JMP");
+                instructions.add("(GREATER"+nb+")");
+                instructions.add("@0");
+                instructions.add("D=A");
+                instructions.add("D=!D");
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=D");
+                instructions.add("(ENDG"+nb+")");
+            }
+            default -> {
+                instructions.add("@SP");
+                instructions.add("AM=M-1");
+                instructions.add("D=M");
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=D-M");
+                instructions.add("D=M");
+                instructions.add("@LESSER"+nb);
+                instructions.add("D;JGT");
+                instructions.add("@0");
+                instructions.add("D=A");
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=D");
+                instructions.add("@ENDL"+nb);
+                instructions.add("0;JMP");
+                instructions.add("(LESSER"+nb+")");
+                instructions.add("@0");
+                instructions.add("D=A");
+                instructions.add("D=!D");
+                instructions.add("@SP");
+                instructions.add("A=M-1");
+                instructions.add("M=D");
+                instructions.add("(ENDL"+nb+")");
+            }
         }
         return instructions;
     }
