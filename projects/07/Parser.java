@@ -47,7 +47,7 @@ public class Parser {
             }
 
             //Getting the translation
-            ArrayList<String> ops = code.process();
+            ArrayList<String> ops = code.process(fileName);
             for (String text:ops) {
                 writer.append(text);
                 writer.newLine();

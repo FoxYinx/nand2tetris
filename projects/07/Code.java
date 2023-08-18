@@ -12,30 +12,40 @@ public class Code {
         this.arg2 = arg2;
     }
 
-    public ArrayList<String> process() {
+    public ArrayList<String> process(String filename) {
         ArrayList<String> output = new ArrayList<>();
         output.add("// " + commandType + " " + arg1 + " " + arg2);
         if(commandType.equals("push")){
-            output.addAll(pushProcess(arg1, arg2));
+            output.addAll(pushProcess(arg1, arg2, filename));
         } else if (commandType.equals("pop")){
-            output.addAll(popProcess(arg1, arg2));
+            output.addAll(popProcess(arg1, arg2, filename));
         } else {
             output.addAll(arithAndLogicProcess(commandType));
         }
         return output;
     }
 
-    public ArrayList<String> pushProcess(String arg1, String arg2){
+    public ArrayList<String> pushProcess(String arg1, String arg2, String filename){
         ArrayList<String> instructions = new ArrayList<>();
         if (arg1.equals("constant")){
             instructions.add("@" + arg2);
             instructions.add("D=A");
         } else if (arg1.equals("static")){
-
+            instructions.add("@" + filename + "." + arg2);
+            instructions.add("D=M");
         } else if (arg1.equals("pointer")){
-
+            if(arg2.equals("0")){
+                instructions.add("@THIS");
+            } else {
+                instructions.add("@THAT");
+            }
+            instructions.add("D=A");
         } else if (arg1.equals("temp")){
-
+            instructions.add("@5");
+            instructions.add("D=M");
+            instructions.add("@" + arg2);
+            instructions.add("A=A+D");
+            instructions.add("D=M");
         } else {
             if (arg1.equals("local")) instructions.add("@LCL");
             if (arg1.equals("argument")) instructions.add("@ARG");
@@ -46,6 +56,47 @@ public class Code {
             instructions.add("A=A+D");
             instructions.add("D=M");
         }
+        instructions = increaseSP(instructions);
+
+        return instructions;
+    }
+
+    public ArrayList<String> popProcess(String arg1, String arg2, String filename){
+        ArrayList<String> instructions = new ArrayList<>();
+        if(arg1.equals("static")){
+            instructions.add("@" + filename + "." + arg2);
+            instructions.add("D=A");
+        } else if (arg1.equals("pointer")) {
+            if(arg2.equals("0")){
+                instructions.add("@THIS");
+            } else {
+                instructions.add("@THAT");
+            }
+            instructions.add("D=A");
+        } else if (arg1.equals("temp")) {
+            instructions.add("@5");
+            instructions.add("D=A");
+            instructions.add("@" + arg2);
+            instructions.add("D=D+A");
+        } else {
+            if (arg1.equals("local")) instructions.add("@LCL");
+            if (arg1.equals("argument")) instructions.add("@ARG");
+            if (arg1.equals("this")) instructions.add("@THIS");
+            if (arg1.equals("that")) instructions.add("@THAT");
+            instructions.add("D=M");
+            instructions.add("@" + arg2);
+            instructions.add("D=D+A");
+        }
+        instructions = popSP(instructions);
+
+        return instructions;
+    }
+
+    public ArrayList<String> arithAndLogicProcess(String commandType){
+        return new ArrayList<>();
+    }
+
+    public ArrayList<String> increaseSP(ArrayList<String> instructions){
         instructions.add("@SP");
         instructions.add("A=M");
         instructions.add("M=D");
@@ -54,11 +105,17 @@ public class Code {
         return instructions;
     }
 
-    public ArrayList<String> popProcess(String arg1, String arg2){
-        return new ArrayList<>();
-    }
-
-    public ArrayList<String> arithAndLogicProcess(String commandType){
-        return new ArrayList<>();
+    public ArrayList<String> popSP(ArrayList<String> instructions){
+        instructions.add("@R13");
+        instructions.add("M=D");
+        instructions.add("@SP");
+        instructions.add("AM=M-1");
+        instructions.add("D=M");
+        instructions.add("@R13");
+        instructions.add("A=M");
+        instructions.add("M=D");
+        return instructions;
     }
 }
+
+
