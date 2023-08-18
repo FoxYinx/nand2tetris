@@ -42,7 +42,7 @@ public class Code {
             instructions.add("D=A");
         } else if (arg1.equals("temp")){
             instructions.add("@5");
-            instructions.add("D=M");
+            instructions.add("D=A");
             instructions.add("@" + arg2);
             instructions.add("A=A+D");
             instructions.add("D=M");
@@ -93,7 +93,27 @@ public class Code {
     }
 
     public ArrayList<String> arithAndLogicProcess(String commandType){
-        return new ArrayList<>();
+        ArrayList<String> instructions = new ArrayList<>();
+        if (commandType.equals("add")){
+            instructions.add("@SP");
+            instructions.add("M=M-1");
+            instructions.add("A=M");
+            instructions.add("D=M");
+            instructions.add("A=A-1");
+            instructions.add("M=D+M");
+        } else if (commandType.equals("sub")) {
+            instructions.add("@SP");
+            instructions.add("M=M-1");
+            instructions.add("A=M-1");
+            instructions.add("D=M");
+            instructions.add("@SP");
+            instructions.add("A=M");
+            instructions.add("D=D-M");
+            instructions.add("@SP");
+            instructions.add("A=M-1");
+            instructions.add("M=D");
+        }
+        return instructions;
     }
 
     public ArrayList<String> increaseSP(ArrayList<String> instructions){

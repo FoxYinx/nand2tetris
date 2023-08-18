@@ -6,10 +6,10 @@ public class VMTranslator {
 
     public static void main(String[] args) {
         try {
-            //String fileName = args[0];
-            File file = new File("MemoryAccess/BasicTest/BasicTest.vm");
+            String fileName = args[0];
+            File file = new File(fileName);
             Parser myParser = new Parser(file);
-            myParser.readLinesAndWrite(myParser.getScanner(), "BasicTest.vm");
+            myParser.readLinesAndWrite(myParser.getScanner(), fileName);
             myParser.closeFile(myParser.getScanner());
         } catch (FileNotFoundException e){
             System.out.println("The file wasn't found");
