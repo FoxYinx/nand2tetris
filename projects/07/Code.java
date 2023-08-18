@@ -39,7 +39,7 @@ public class Code {
             } else {
                 instructions.add("@THAT");
             }
-            instructions.add("D=A");
+            instructions.add("D=M");
         } else if (arg1.equals("temp")){
             instructions.add("@5");
             instructions.add("D=A");
