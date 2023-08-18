@@ -20,10 +20,10 @@ public class Parser {
 
     public void readLinesAndWrite(Scanner scanner, String fileName) throws IOException {
         //Setting up the output file
+        fileName = fileName.substring(0, fileName.length()-3);
         File file = new File(fileName + ".asm");
         file.delete();
-        fileName = fileName.substring(0, fileName.length()-3);
-        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".hack", true));
+        BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".asm", true));
 
         while(scanner.hasNextLine()){
             //Handling comments and whitespaces
@@ -41,7 +41,7 @@ public class Parser {
             String[] datas = data.split(" ");
             Code code;
             if (datas.length==1){
-                code = new Code(datas[0], null, null);
+                code = new Code(datas[0], "", "");
             } else {
                 code = new Code(datas[0], datas[1], datas[2]);
             }
